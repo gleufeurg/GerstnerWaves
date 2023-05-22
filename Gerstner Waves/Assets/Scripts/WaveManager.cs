@@ -29,11 +29,13 @@ public class WaveManager : MonoBehaviour
 
     private void Update()
     {
-        offset = speed * Time.deltaTime;
+        offset = Time.deltaTime * speed;
     }
 
     public float GetWaveHeight(float x)
     {
+        //Calcul the Amplitude of the wave (its height based on its length)
+        //The amplitude (height) is sin(x) (more realistic version is x = cos(theta))
         return amplitude * Mathf.Sin(x / length + offset);
     }
 }
