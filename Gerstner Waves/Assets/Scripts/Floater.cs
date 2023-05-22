@@ -4,28 +4,41 @@ using UnityEngine;
 
 public class Floater : MonoBehaviour
 {
-    public Rigidbody rb;
-    public GameObject floaters;
+    [SerializeField] bool autoSet = true; //If autoSet --> Require a gamObject parent of all floaters
+    public Rigidbody rb; //Boat Rigidbody, not the floater's
+    public Transform parent; //Parent of this gameObject --> Contains every Floater of the boat (used only to get the RigidBody)
 
-    public float depthBeforeSubmerged;
-    public float displacementAmount;
+    public float depthBeforeSubmerged = 1f;
+    public float displacementAmount = 3f;
     public float waterDrag = 0.99f;
     public float waterAngularDrag = 0.5f;
-    private int floaterCount = 1;
+    public int floaterCount = 1;
 
-    private void Start()
+    private void Awake()
     {
-        floaterCount = floaters.transform.childCount;
+        #region AutoSet
+
+        if (!autoSet)
+            return;
+        
+        parent = gameObject.transform.parent;
+        floaterCount = parent.transform.childCount;
+
+        rb = parent.parent.GetComponent<Rigidbody>(); //Original parent Rigidbody (the boat / floating object) (if there are more parents, do more .parent :)
+
+        #endregion
+
     }
 
     private void FixedUpdate()
     {
         rb.AddForceAtPosition(Physics.gravity / floaterCount, transform.position, ForceMode.Acceleration);
         float waveHeight = WaveManager.Instance.GetWaveHeight(transform.position.x);
+
         if (transform.position.y < waveHeight)
         {
             float displacementMultiplier = Mathf.Clamp01((waveHeight - transform.position.y) / depthBeforeSubmerged) * displacementAmount;
-            rb.AddForceAtPosition(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * displacementMultiplier, 0f), transform.position, ForceMode.Acceleration);
+            rb.AddForceAtPosition(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * displacementMultiplier, 0f),transform.position, ForceMode.Acceleration);
             rb.AddTorque(displacementMultiplier * Time.fixedDeltaTime * waterDrag * -rb.velocity, ForceMode.VelocityChange);
             rb.AddTorque(displacementMultiplier * Time.fixedDeltaTime * waterAngularDrag * -rb.angularVelocity, ForceMode.VelocityChange);
         }

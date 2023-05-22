@@ -16,6 +16,7 @@ public class WaveManager : MonoBehaviour
         }
         else if (Instance != null && Instance != this)
         {
+            Debug.LogError("Multiples WaveManager Instance");
             Destroy(this);
         }
     }
@@ -25,11 +26,12 @@ public class WaveManager : MonoBehaviour
     public float amplitude = 1f;
     public float length = 2f;
     public float speed = 1f;
-    public float offset = 0f;
+    float offset = 0f;
 
     private void Update()
     {
-        offset = Time.deltaTime * speed;
+        //Waves simple movement on x axis
+        offset += Time.deltaTime * speed;
     }
 
     public float GetWaveHeight(float x)

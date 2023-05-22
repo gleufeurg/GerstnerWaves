@@ -13,12 +13,12 @@ public class WaterManager : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector3[] vertices = meshFilter.mesh.vertices;
         for (int i = 0; i < vertices.Length; i++)
         {
-            //Calculate vertice.y position = wave.amplitude
+            //Calculate each vertex.y position = wave.amplitude
             vertices[i].y = WaveManager.Instance.GetWaveHeight(transform.position.x + vertices[i].x);
         }
 
