@@ -8,10 +8,13 @@ public class Floater : MonoBehaviour
     public Rigidbody rb; //Boat Rigidbody, not the floater's
     public Transform parent; //Parent of this gameObject --> Contains every Floater of the boat (used only to get the RigidBody)
 
+    //Default values for a 4floater boat
     public float depthBeforeSubmerged = 1f;
     public float displacementAmount = 3f;
-    public float waterDrag = 0.99f;
-    public float waterAngularDrag = 0.5f;
+    public float waterDrag = 1f;
+    public float waterAngularDrag = 4f;
+
+    //Except this would be 4
     public int floaterCount = 1;
 
     private void Awake()
